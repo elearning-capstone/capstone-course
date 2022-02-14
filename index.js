@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
   res.json({ message: "health check ok" });
 });
 
-app.use("/", require("./routes/course"));
+app.use("/course", require("./routes/course"));
 
 // set port, listen for requests
 const PORT = 3000;

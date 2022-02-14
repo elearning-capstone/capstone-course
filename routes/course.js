@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { study, course } = require("../models");
 
-router.get("/all", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         return course.findAll({
             attributes: [ 'id', 'name', 'description' ],
