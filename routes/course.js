@@ -37,6 +37,7 @@ router.post("/create", async (req, res) => {
 router.post("/register", async (req, res) => {
     try {
         const { course_id } = req.body;
+        const { user_id } = req.query;
 
         let count_course = course.count({
             where: {
@@ -46,7 +47,7 @@ router.post("/register", async (req, res) => {
 
         let count_study = study.count({
             where: {
-                user_id: req.user.user_id,
+                user_id,
                 course_id,
             }
         })
@@ -60,7 +61,7 @@ router.post("/register", async (req, res) => {
         }
 
         await study.create({
-            user_id: req.user.user_id,
+            user_id,
             course_id,
         });
 

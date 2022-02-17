@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 
 router.post("/create", userCheckMiddleware, async (req, res) => {
     try {
-        const response = await axios.post(review_ip + "/review/create", req.body, { headers: { user: req.headers['user'] } });
+        const response = await axios.post(review_ip + "/review/create", req.body, { params: req.query });
         return res.json(response.data);
     } catch (err) {
         return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
