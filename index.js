@@ -18,6 +18,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/course", require("./routes/course"));
+app.use("/review", require("./routes/review"));
 
 // set port, listen for requests
 const PORT = 3000;
