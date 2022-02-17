@@ -12,6 +12,28 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.post("/create", async (req, res) => {
+    try {
+        const { name, description, requirement } = req.body;
+
+        if (typeof name != "string" || typeof description != "string" || typeof requirement != "number") {
+            return res.status(400).json({ message: "invalid name, description or requirement" })
+        }
+
+        let new_course = await course.create({
+            name,
+            description,
+            requirement
+        });
+
+        return res.json({
+            course: new_course
+        });
+    } catch(err) {
+        return res.status(404).json({ message: "not found" });
+    }
+});
+
 router.post("/register", async (req, res) => {
     try {
         const { course_id } = req.body;
