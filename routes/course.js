@@ -4,8 +4,12 @@ const { study, course } = require("../models");
 
 router.get("/", async (req, res) => {
     try {
-        return course.findAll({
+        let courses = await course.findAll({
             attributes: [ 'id', 'name', 'description' ],
+        });
+
+        return res.json({
+            course: courses
         });
     } catch(err) {
         return res.status(404).json({ message: "not found" });
