@@ -1,7 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const router = express.Router();
-const { studyCheckMiddleware } = require("../middleware");
+const { courseCheckMiddleware, studyCheckMiddleware } = require("../middleware");
 
 const review_ip = "";
 
