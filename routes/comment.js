@@ -43,7 +43,7 @@ router.post("/like", studyCheckMiddleware, async (req, res) => {
 
 router.post("/unlike", studyCheckMiddleware, async (req, res) => {
     try {
-        const response = await axios.post(comment_ip + "/unlike", req.body, { params: req.query });
+        const response = await axios.post(comment_ip + "/comment/unlike", req.body, { params: req.query });
         return res.json(response.data);
     } catch (err) {
         return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
