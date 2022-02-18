@@ -36,8 +36,7 @@ router.post("/create", async (req, res) => {
 
 router.post("/register", async (req, res) => {
     try {
-        const { course_id } = req.body;
-        const { user_id } = req.query;
+        const { user_id, course_id } = req.query;
 
         let count_course = course.count({
             where: {
