@@ -3,7 +3,7 @@ const axios = require("axios");
 const router = express.Router();
 const { courseCheckMiddleware, studyCheckMiddleware } = require("../middleware");
 
-const review_ip = "";
+const review_ip = "http://ip-172-31-37-115.ap-southeast-1.compute.internal:3000";
 
 router.get("/", courseCheckMiddleware, async (req, res) => {
     try {
