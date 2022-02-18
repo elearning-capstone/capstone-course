@@ -24,7 +24,7 @@ exports.courseCheckMiddleware = async (req, res, next) => {
 
 exports.studyCheckMiddleware = async (req, res, next) => {
     try {
-        if (req.headers['user'].role == "lecturer") {
+        if (req.query.role == "lecturer") {
             //TODO: check if lecturer teach is course or not
 
             next();
@@ -36,7 +36,7 @@ exports.studyCheckMiddleware = async (req, res, next) => {
 
         let count = await study.count({
             where: {
-                user_id: req.headers['user'].user_id,
+                user_id: req.query.user_id,
                 course_id: req.query.course_id,
             }
         });
