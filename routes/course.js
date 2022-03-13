@@ -12,6 +12,25 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get("/study", async (req, res) => {
+    try {
+        const { user_id } = req.query;
+
+        return course.findAll({
+            attributes: [ 'id', 'name', 'description' ],
+            include: {
+                model: study,
+                required: true,
+                where: {
+                    user_id,
+                },
+            }
+        });
+    } catch(err) {
+        return res.status(404).json({ message: "not found" });
+    }
+});
+
 router.post("/create", async (req, res) => {
     try {
         const { name, description, requirement } = req.body;
