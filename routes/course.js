@@ -20,7 +20,7 @@ router.get("/study", async (req, res) => {
     try {
         const { user_id } = req.query;
 
-        return course.findAll({
+        let courses = await course.findAll({
             attributes: [ 'id', 'name', 'description' ],
             include: {
                 model: study,
@@ -29,6 +29,10 @@ router.get("/study", async (req, res) => {
                     user_id,
                 },
             }
+        });
+
+        return res.json({
+            course: courses
         });
     } catch(err) {
         return res.status(404).json({ message: "not found" });
