@@ -1,13 +1,49 @@
 const express = require("express");
 const axios = require("axios");
 const router = express.Router();
-const { courseCheckMiddleware } = require("../middleware");
+const { studyCheckMiddleware } = require("../middleware");
 
-const course_ip = "";
+const comment_ip = "http://ip-172-31-38-128.ap-southeast-1.compute.internal:3000";
 
-router.get("/", courseCheckMiddleware, async (req, res) => {
+router.get("/", studyCheckMiddleware, async (req, res) => {
     try {
-        const response = await axios.get(course_ip + "/comment", { params: req.query });
+        const response = await axios.get(comment_ip + "/comment", { params: req.query });
+        return res.json(response.data);
+    } catch (err) {
+        return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
+    }
+});
+
+router.post("/", studyCheckMiddleware, async (req, res) => {
+    try {
+        const response = await axios.post(comment_ip + "/comment", req.body, { params: req.query });
+        return res.json(response.data);
+    } catch (err) {
+        return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
+    }
+});
+
+router.post("/reply", studyCheckMiddleware, async (req, res) => {
+    try {
+        const response = await axios.post(comment_ip + "/comment/reply", req.body, { params: req.query });
+        return res.json(response.data);
+    } catch (err) {
+        return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
+    }
+});
+
+router.post("/like", studyCheckMiddleware, async (req, res) => {
+    try {
+        const response = await axios.post(comment_ip + "/comment/like", req.body, { params: req.query });
+        return res.json(response.data);
+    } catch (err) {
+        return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
+    }
+});
+
+router.post("/unlike", studyCheckMiddleware, async (req, res) => {
+    try {
+        const response = await axios.post(comment_ip + "/comment/unlike", req.body, { params: req.query });
         return res.json(response.data);
     } catch (err) {
         return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
