@@ -50,6 +50,7 @@ router.get("/study", async (req, res) => {
             let studyCourse = await course.findOne({
                 where: { id: course_id },
                 attributes: [ 'id', 'name', 'description', 'survey_group_id' ],
+                raw: true
             });
 
             const review_promise = axios.get(review_ip + "/review/average", { params: { course_id: course_id } });
