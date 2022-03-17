@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
             validate: {
                 notEmpty: true,
             },
-        }
+        },
+        survey_group_id: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
     });
 
     course.associate = (models) => {
