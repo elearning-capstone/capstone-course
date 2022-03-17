@@ -48,7 +48,7 @@ router.get("/study", async (req, res) => {
             }
 
             let studyCourse = await course.findOne({
-                where: { course_id },
+                where: { id: course_id },
                 attributes: [ 'id', 'name', 'description', 'survey_group_id' ],
             });
 
