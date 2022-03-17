@@ -13,9 +13,7 @@ router.get("/", async (req, res) => {
             raw: true
         });
 
-        let course_ids = [];
-
-        courses.forEach(course => course_ids.push(course.id));
+        let course_ids = courses.map(course => course.id);
 
         const response = await axios.get(review_ip + "/review/average", { params: { course_id: course_ids } });
 
@@ -86,9 +84,13 @@ router.get("/study", async (req, res) => {
             raw: true
         });
 
-        let course_ids = [];
+        if (courses.length == 0) {
+            return res.json({
+                course: []
+            });
+        }
 
-        courses.forEach(course => course_ids.push(course.id));
+        let course_ids = courses.map(course => course.id);
 
         const response = await axios.get(review_ip + "/review/average", { params: { course_id: course_ids } });
 
