@@ -2,10 +2,24 @@ const express = require("express");
 const router = express.Router();
 const { study, course } = require("../models");
 
+const review_ip = "http://ip-172-31-37-115.ap-southeast-1.compute.internal:3000";
+
 router.get("/", async (req, res) => {
     try {
         let courses = await course.findAll({
             attributes: [ 'id', 'name', 'description' ],
+        });
+
+        let course_ids = [];
+
+        courses.forEach(course => course_ids.push(course.id));
+
+        const response = await axios.get(review_ip + "/review/average", { params: course_ids });
+
+        courses.map(course => {
+            let id = course.id.toString()
+            course.avgReview = response[id].avgReview
+            course.countReview = response[id].countReview
         });
 
         return res.json({
