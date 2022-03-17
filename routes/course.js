@@ -54,14 +54,19 @@ router.get("/study", async (req, res) => {
                 attributes: [ 'id', 'name', 'description', 'survey_group_id' ],
             });
 
-            const avgReview_res = await axios.get(review_ip + "/review/average", { params: { course_id: course_id } });
-            const is_review_res = await axios.get(review_ip + "/review/is_review", { params: { course_id: course_id, user_id: user_id } });
-            const is_survey_res = await axios.get(survey_ip + "/survey/is_survey", { params: { survey_id: course.survey_group_id, user_id: user_id } });
+            const review_promise = axios.get(review_ip + "/review/average", { params: { course_id: course_id } });
+            const is_review_promise = axios.get(review_ip + "/review/is_review", { params: { course_id: course_id, user_id: user_id } });
+            const is_survey_promise = axios.get(survey_ip + "/survey/is_survey", { params: { survey_id: course.survey_group_id, user_id: user_id } });
             
+            const review_res = await review_promise;
             let id = course_id.toString();
-            course.avgReview = avgReview_res[id].avgReview;
-            course.countReview = avgReview_res[id].countReview;
+            course.avgReview = review_res[id].avgReview;
+            course.countReview = review_res[id].countReview;
+
+            const is_review_res = await is_review_promise;
             course.is_review = is_review_res.is_review;
+
+            const is_survey_res = await is_survey_promise;
             course.is_survey = is_survey_res.is_survey;
 
             return res.json({
@@ -77,8 +82,21 @@ router.get("/study", async (req, res) => {
                 where: {
                     user_id,
                 },
-            }
+            },
+            raw: true
         });
+
+        let course_ids = [];
+
+        courses.forEach(course => course_ids.push(course.id));
+
+        const response = await axios.get(review_ip + "/review/average", { params: { course_id: course_ids } });
+
+        for (let i = 0; i < courses.length; i++) {
+            let id = courses[i].id.toString();
+            courses[i].avgReview = response.data[id].avgReview;
+            courses[i].countReview = response.data[id].countReview;
+        }
 
         return res.json({
             course: courses
