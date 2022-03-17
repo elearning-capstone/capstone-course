@@ -47,28 +47,28 @@ router.get("/study", async (req, res) => {
                 return res.status(403).json({ message: "user must study this course" });
             }
 
-            let course = await course.findOne({
+            let studyCourse = await course.findOne({
                 where: { course_id },
                 attributes: [ 'id', 'name', 'description', 'survey_group_id' ],
             });
 
             const review_promise = axios.get(review_ip + "/review/average", { params: { course_id: course_id } });
             const is_review_promise = axios.get(review_ip + "/review/is_review", { params: { course_id: course_id, user_id: user_id } });
-            const is_survey_promise = axios.get(survey_ip + "/survey/is_survey", { params: { survey_id: course.survey_group_id, user_id: user_id } });
+            const is_survey_promise = axios.get(survey_ip + "/survey/is_survey", { params: { survey_id: studyCourse.survey_group_id, user_id: user_id } });
             
             const review_res = await review_promise;
             let id = course_id.toString();
-            course.avgReview = review_res[id].avgReview;
-            course.countReview = review_res[id].countReview;
+            studyCourse.avgReview = review_res.data[id].avgReview;
+            studyCourse.countReview = review_res.data[id].countReview;
 
             const is_review_res = await is_review_promise;
-            course.is_review = is_review_res.is_review;
+            studyCourse.is_review = is_review_res.data.is_review;
 
             const is_survey_res = await is_survey_promise;
-            course.is_survey = is_survey_res.is_survey;
+            studyCourse.is_survey = is_survey_res.data.is_survey;
 
             return res.json({
-                course: courses
+                course: studyCourse
             });
         }
 
