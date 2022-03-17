@@ -8,6 +8,33 @@ const survey_ip = "http://ip-172-31-37-162.ap-southeast-1.compute.internal:3000"
 
 router.get("/", async (req, res) => {
     try {
+        let courses = await course.findAll({
+            attributes: [ 'id', 'name', 'description' ],
+            raw: true
+        });
+
+        let course_ids = [];
+
+        courses.forEach(course => course_ids.push(course.id));
+
+        const response = await axios.get(review_ip + "/review/average", { params: { course_id: course_ids } });
+
+        for (let i = 0; i < courses.length; i++) {
+            let id = courses[i].id.toString();
+            courses[i].avgReview = response.data[id].avgReview;
+            courses[i].countReview = response.data[id].countReview;
+        }
+
+        return res.json({
+            course: courses
+        });
+    } catch(err) {
+        return res.status(404).json({ message: "not found" });
+    }
+});
+
+router.get("/study", async (req, res) => {
+    try {
         const { user_id, course_id } = req.query;
 
         if (course_id) {
@@ -41,34 +68,6 @@ router.get("/", async (req, res) => {
                 course: courses
             });
         }
-
-        let courses = await course.findAll({
-            attributes: [ 'id', 'name', 'description' ],
-        });
-
-        let course_ids = [];
-
-        courses.forEach(course => course_ids.push(course.id));
-
-        const response = await axios.get(review_ip + "/review/average", { params: { course_id: course_ids } });
-
-        courses.map(course => {
-            let id = course.id.toString();
-            course.avgReview = response[id].avgReview;
-            course.countReview = response[id].countReview;
-        });
-
-        return res.json({
-            course: courses
-        });
-    } catch(err) {
-        return res.status(404).json({ message: "not found" });
-    }
-});
-
-router.get("/study", async (req, res) => {
-    try {
-        const { user_id } = req.query;
 
         let courses = await course.findAll({
             attributes: [ 'id', 'name', 'description' ],
