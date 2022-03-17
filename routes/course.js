@@ -44,7 +44,7 @@ router.get("/study", async (req, res) => {
             });
 
             if (count == 0) {
-                return res.status(403).json({ message: "user must study this course" });
+                return res.json({ message: "not registered" });
             }
 
             let studyCourse = await course.findOne({
