@@ -33,5 +33,11 @@ module.exports = (sequelize, DataTypes) => {
         });
     };
 
+    course.associate = (models) => {
+        course.hasOne(models.teach, {
+            foreignKey: "course_id",
+        });
+    };
+
     return course;
 }
