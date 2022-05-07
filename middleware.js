@@ -38,6 +38,7 @@ exports.studyCheckMiddleware = async (req, res, next) => {
             });
 
             if (count != 0){
+                req.query.teach = true;
                 next();
             }
         }
