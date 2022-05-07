@@ -1,4 +1,5 @@
 const { course, study } = require("./models");
+const axios = require("axios");
 
 exports.courseCheckMiddleware = async (req, res, next) => {
     try {
@@ -73,6 +74,27 @@ exports.teachCheckMiddleware = async (req, res, next) => {
 
         if (count == 0){
             return res.status(403).json({ message: "user must teach this course" });
+        }
+    } catch (err) {
+        return res.status(404).json({ message: "not found" });
+    }
+
+    next();
+};
+
+const live_ip = "";
+
+exports.getCourseIdFromLiveMiddleware = async (req, res, next) => {
+    try {
+        if (!req.query.live_id) {
+            return res.status(400).json({ message: "missing live id" });
+        }
+
+        try {
+            const response = await axios.get(live_ip + "/live/course_id", { params: req.query });
+            req.query.course_id = response.data.course_id;
+        } catch (err) {
+            return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
         }
     } catch (err) {
         return res.status(404).json({ message: "not found" });
