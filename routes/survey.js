@@ -14,13 +14,4 @@ router.get("/result", lecturerCheckMiddleware, async (req, res) => {
     }
 });
 
-router.post("/live_survey", [getCourseIdFromLiveMiddleware, teachCheckMiddleware], async (req, res) => {
-    try {
-        const response = await axios.post(survey_ip + "/survey/live_survey", req.body, { params: req.query });
-        return res.json(response.data);
-    } catch (err) {
-        return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
-    }
-});
-
 module.exports = router;
