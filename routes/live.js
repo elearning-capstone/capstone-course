@@ -4,7 +4,7 @@ const router = express.Router();
 const { studyCheckMiddleware, teachCheckMiddleware, getCourseIdFromLiveMiddleware } = require("../middleware");
 
 const live_ip = "";
-const survey_ip = "";
+const survey_ip = "http://ip-172-31-37-162.ap-southeast-1.compute.internal:3000";
 
 router.post("/survey", [getCourseIdFromLiveMiddleware, teachCheckMiddleware], async (req, res) => {
     try {
