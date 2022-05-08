@@ -230,7 +230,7 @@ router.get("/information", async (req, res) => {
         }
 
         return res.json({
-            course_id: course_id,
+            course_id: course_info.id,
             name: course_info.name,
             description: course_info.description,
             lecturer_id: teach_info.user_id
