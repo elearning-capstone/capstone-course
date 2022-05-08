@@ -5,6 +5,7 @@ const { study, course, teach } = require("../models");
 
 const review_ip = "http://ip-172-31-37-115.ap-southeast-1.compute.internal:3000";
 const survey_ip = "http://ip-172-31-37-162.ap-southeast-1.compute.internal:3000";
+const cert_ip = "";
 
 router.get("/", async (req, res) => {
     try {
@@ -185,7 +186,7 @@ router.put("/studyprogress", async (req, res) => {
             where: {
                 user_id: user_id,
                 course_id: course_id
-            }
+            },
         });
 
         if (count == 0) {
@@ -196,7 +197,8 @@ router.put("/studyprogress", async (req, res) => {
             where: {
                 user_id: user_id,
                 course_id: course_id
-            }
+            },
+            individualHooks: true
         });
 
         return res.json({ message: "success" });
@@ -235,6 +237,26 @@ router.get("/information", async (req, res) => {
             description: course_info.description,
             lecturer_id: teach_info.user_id
         });
+    } catch(err) {
+        return res.status(404).json({ message: "not found" });
+    }
+});
+
+router.get("/checkprogress", async (req, res) => {
+    try {
+        const { user_id, course_id, progression } = req.query;
+
+        const course_info = await course.findOne({
+            where: {
+                id: course_id
+            }
+        });
+
+        if (progression >= course_info.requirement) {
+            await axios.get(cert_ip + "/cert", { params: { user_id, course_id } });
+        }
+
+        return res.json({ message: "success" });
     } catch(err) {
         return res.status(404).json({ message: "not found" });
     }
