@@ -1,7 +1,7 @@
 const axios = require("axios");
 const express = require("express");
 const router = express.Router();
-const { study, course } = require("../models");
+const { study, course, teach } = require("../models");
 
 const review_ip = "http://ip-172-31-37-115.ap-southeast-1.compute.internal:3000";
 const survey_ip = "http://ip-172-31-37-162.ap-southeast-1.compute.internal:3000";
@@ -200,6 +200,41 @@ router.put("/studyprogress", async (req, res) => {
         });
 
         return res.json({ message: "success" });
+    } catch(err) {
+        return res.status(404).json({ message: "not found" });
+    }
+});
+
+router.get("/information", async (req, res) => {
+    try {
+        const { course_id } = req.query;
+
+        const course_info = await course.findOne({
+            where: {
+                id: course_id
+            }
+        });
+
+        if(!course_info) {
+            return res.status(400).json({ message: "course not exist" });
+        }
+
+        const teach_info = await teach.findOne({
+            where: {
+                course_id
+            }
+        });
+
+        if(!teach_info) {
+            return res.status(400).json({ message: "no teach information found" });
+        }
+
+        return res.json({
+            course_id: course_id,
+            name: course_info.name,
+            description: course_info.description,
+            lecturer_id: teach_info.user_id
+        });
     } catch(err) {
         return res.status(404).json({ message: "not found" });
     }
