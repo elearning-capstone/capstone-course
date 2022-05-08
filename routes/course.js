@@ -168,4 +168,41 @@ router.post("/register", async (req, res) => {
     }
 });
 
+router.put("/studyprogress", async (req, res) => {
+    try {
+        const { progression } = req.body;
+        const { course_id, user_id } = req.query;
+
+        if (!course_id || !user_id) {
+            return res.status(400).json({ message: "missing course_id, user_id" });
+        }
+
+        if (typeof progression != "number") {
+            return res.status(400).json({ message: "invalid progression" })
+        }
+
+        let count = await study.count({
+            where: {
+                user_id: user_id,
+                course_id: course_id
+            }
+        });
+
+        if (count == 0) {
+            return res.status(404).json({ message: "invalid user_id or course_id" });
+        };
+
+        await study.update({ progression: progression }, {
+            where: {
+                user_id: user_id,
+                course_id: course_id
+            }
+        });
+
+        return res.json({ message: "success" });
+    } catch(err) {
+        return res.status(404).json({ message: "not found" });
+    }
+});
+
 module.exports = router;
