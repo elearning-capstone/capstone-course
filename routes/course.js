@@ -112,10 +112,10 @@ router.get("/study", async (req, res) => {
 
 router.post("/create", async (req, res) => {
     try {
-        const { name, description, requirement, survey_group_id } = req.body;
+        const { name, description, requirement, lecturer_id, survey_group_id } = req.body;
 
-        if (typeof name != "string" || typeof description != "string" || typeof requirement != "number") {
-            return res.status(400).json({ message: "invalid name, description or requirement" })
+        if (typeof name != "string" || typeof description != "string" || typeof requirement != "number" || typeof lecturer_id != "number") {
+            return res.status(400).json({ message: "invalid name, description, requirement or lecturer_id" })
         }
 
         let new_course = await course.create({
@@ -125,8 +125,14 @@ router.post("/create", async (req, res) => {
             survey_group_id
         });
 
+        let new_teach = await teach.create({
+            user_id: lecturer_id,
+            course_id: new_course.id
+        });
+
         return res.json({
-            course: new_course
+            course: new_course,
+            lecturer_id: new_teach.user_id
         });
     } catch(err) {
         return res.status(404).json({ message: "not found" });
