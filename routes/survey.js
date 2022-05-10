@@ -7,7 +7,7 @@ const survey_ip = "http://ip-172-31-37-162.ap-southeast-1.compute.internal:3000"
 
 router.get("/result", lecturerCheckMiddleware, async (req, res) => {
     try {
-        const response = await axios.post(survey_ip + "/survey/result", { params: req.query });
+        const response = await axios.get(survey_ip + "/survey/result", { params: req.query });
         return res.json(response.data);
     } catch (err) {
         return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
