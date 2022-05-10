@@ -15,6 +15,15 @@ router.post("/survey", [getCourseIdFromLiveMiddleware, teachCheckMiddleware], as
     }
 });
 
+router.get("/", [getCourseIdFromLiveMiddleware, studyCheckMiddleware], async (req, res) => {
+    try {
+        const response = await axios.get(live_ip + "/live", { params: req.query });
+        return res.json(response.data);
+    } catch (err) {
+        return res.status(err.response.status || 404).json(err.response.data || { message: "not found" });
+    }
+});
+
 router.get("/sync", [getCourseIdFromLiveMiddleware, studyCheckMiddleware], async (req, res) => {
     try {
         const response = await axios.get(live_ip + "/live/sync", { params: req.query });
