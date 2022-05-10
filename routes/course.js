@@ -5,7 +5,7 @@ const { study, course, teach } = require("../models");
 
 const review_ip = "http://ip-172-31-37-115.ap-southeast-1.compute.internal:3000";
 const survey_ip = "http://ip-172-31-37-162.ap-southeast-1.compute.internal:3000";
-const cert_ip = "";
+const cert_ip = "http://ip-172-31-43-133.ap-southeast-1.compute.internal:3000";
 
 router.get("/", async (req, res) => {
     try {
