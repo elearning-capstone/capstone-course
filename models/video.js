@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const course = sequelize.define("course", {
+    const video = sequelize.define("video", {
         name: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -14,30 +14,27 @@ module.exports = (sequelize, DataTypes) => {
                 notEmpty: true,
             },
         },
-        requirement: {
-            type: DataTypes.DOUBLE,
+        video_url: {
+            type: DataTypes.STRING,
             allowNull: false,
             validate: {
                 notEmpty: true,
             },
         },
-        survey_group_id: {
+        course_id: {
             type: DataTypes.INTEGER,
-            allowNull: true,
-        },
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            },
+        }
     });
 
-    course.associate = (models) => {
-        course.hasMany(models.video, {
-            foreignKey: "course_id",
-        });
-        course.hasMany(models.study, {
-            foreignKey: "course_id",
-        });
-        course.hasOne(models.teach, {
+    video.associate = (models) => {
+        video.belongsTo(models.course, {
             foreignKey: "course_id",
         });
     };
 
-    return course;
+    return video;
 }
