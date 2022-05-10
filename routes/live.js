@@ -42,7 +42,7 @@ router.post("/chat", [getCourseIdFromLiveMiddleware, studyCheckMiddleware], asyn
     }
 });
 
-router.post("/", [getCourseIdFromLiveMiddleware, studyCheckMiddleware], async (req, res) => {
+router.post("/", teachCheckMiddleware, async (req, res) => {
     try {
         const response = await axios.post(live_ip + "/live/", req.body, { params: req.query });
         return res.json(response.data);
