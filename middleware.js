@@ -41,7 +41,9 @@ exports.studyCheckMiddleware = async (req, res, next) => {
 
             if (count != 0){
                 req.query.teach = true;
-                next();
+                return next();
+            } else {
+                req.query.role == "user";
             }
         }
 
