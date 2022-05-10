@@ -51,7 +51,7 @@ router.post("/", teachCheckMiddleware, async (req, res) => {
     }
 });
 
-router.put("/info", [getCourseIdFromLiveMiddleware, studyCheckMiddleware], async (req, res) => {
+router.put("/info", [getCourseIdFromLiveMiddleware, teachCheckMiddleware], async (req, res) => {
     try {
         const response = await axios.put(live_ip + "/live/info", req.body, { params: req.query });
         return res.json(response.data);

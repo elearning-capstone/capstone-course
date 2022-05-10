@@ -89,10 +89,6 @@ exports.teachCheckMiddleware = async (req, res, next) => {
 
 exports.getCourseIdFromLiveMiddleware = async (req, res, next) => {
     try {
-        if (req.query.role != "lecturer") {
-            return res.status(403).json({ message: "user must be lecturer" });
-        }
-
         if (!req.query.live_id) {
             return res.status(400).json({ message: "missing live id" });
         }
