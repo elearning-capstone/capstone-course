@@ -1,7 +1,7 @@
-const { course, study } = require("./models");
+const { course, study, teach } = require("./models");
 const axios = require("axios");
 
-const live_ip = "";
+const live_ip = "http://ip-172-31-38-32.ap-southeast-1.compute.internal:3000";
 
 exports.courseCheckMiddleware = async (req, res, next) => {
     try {
@@ -74,7 +74,7 @@ exports.teachCheckMiddleware = async (req, res, next) => {
                 course_id: req.query.course_id,
             }
         });
-
+        
         if (count == 0){
             return res.status(403).json({ message: "user must teach this course" });
         }
