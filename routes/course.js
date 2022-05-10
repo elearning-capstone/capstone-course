@@ -1,7 +1,8 @@
 const axios = require("axios");
 const express = require("express");
 const router = express.Router();
-const { study, course, teach } = require("../models");
+const { study, course, teach, video } = require("../models");
+const { teachCheckMiddleware } = require("../middleware");
 
 const review_ip = "http://ip-172-31-37-115.ap-southeast-1.compute.internal:3000";
 const survey_ip = "http://ip-172-31-37-162.ap-southeast-1.compute.internal:3000";
@@ -263,6 +264,49 @@ router.get("/checkprogress", async (req, res) => {
         }
 
         return res.json({ message: "success" });
+    } catch(err) {
+        return res.status(404).json({ message: "not found" });
+    }
+});
+
+router.post("/video", teachCheckMiddleware, async (req, res) => {
+    try {
+        const { course_id } = req.query;
+        const { name, description, video_url } = req.body;
+        
+        if (typeof video_url != "string") {
+            return res.status(400).json({ message: "invalid video_url" })
+        }
+
+        const new_video = await video.create({
+            name,
+            description,
+            video_url,
+            course_id,
+        });
+
+        return res.json({
+            video: new_video
+        });
+    } catch(err) {
+        return res.status(404).json({ message: "not found" });
+    }
+});
+
+router.get("/videos", async (req, res) => {
+    try {
+        const { course_id } = req.query;
+
+        const videos = await video.findAll({
+            attributes: [ 'name', 'description', 'video_url' ],
+            order: [ [ 'createdAt', 'DESC' ] ],
+            where: {
+                course_id
+            },
+            raw: true
+        });
+
+        return res.json({ videos: videos });
     } catch(err) {
         return res.status(404).json({ message: "not found" });
     }
