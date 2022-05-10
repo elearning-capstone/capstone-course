@@ -2,7 +2,7 @@ const axios = require("axios");
 const express = require("express");
 const router = express.Router();
 const { study, course, teach, video } = require("../models");
-const { teachCheckMiddleware } = require("../middleware");
+const { teachCheckMiddleware, lecturerCheckMiddleware } = require("../middleware");
 
 const review_ip = "http://ip-172-31-37-115.ap-southeast-1.compute.internal:3000";
 const survey_ip = "http://ip-172-31-37-162.ap-southeast-1.compute.internal:3000";
@@ -107,6 +107,48 @@ router.get("/study", async (req, res) => {
             course: courses
         });
     } catch(err) {
+        return res.status(404).json({ message: "not found" });
+    }
+});
+
+router.get("/teach", lecturerCheckMiddleware, async (req, res) => {
+    try {
+        const { user_id } = req.query;
+
+        let courses = await course.findAll({
+            attributes: [ 'id', 'name', 'description' ],
+            include: {
+                model: teach,
+                attributes: [],
+                required: true,
+                where: {
+                    user_id,
+                },
+            },
+            raw: true
+        });
+
+        if (courses.length == 0) {
+            return res.json({
+                course: []
+            });
+        }
+
+        let course_ids = courses.map(course => course.id);
+
+        const response = await axios.get(review_ip + "/review/average", { params: { course_id: course_ids } });
+
+        for (let i = 0; i < courses.length; i++) {
+            let id = courses[i].id.toString();
+            courses[i].avgReview = response.data[id].avgReview;
+            courses[i].countReview = response.data[id].countReview;
+        }
+
+        return res.json({
+            course: courses
+        });
+    } catch(err) {
+        console.log(err);
         return res.status(404).json({ message: "not found" });
     }
 });
